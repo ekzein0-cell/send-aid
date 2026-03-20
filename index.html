@@ -135,22 +135,31 @@ body {
 <audio id="clickMusic" src="sound2.mp3" loop></audio>
 
 <script>
+// Global audio elements
+const bgMusic = document.getElementById("bgMusic");
+const clickMusic = document.getElementById("clickMusic");
+
+// Play bgMusic after first user interaction anywhere
 function startMain() {
     document.getElementById("greeting").style.display = "none";
     document.getElementById("main").style.display = "block";
 
-    document.getElementById("bgMusic").play();
+    // Attempt to play bgMusic (some browsers require a user gesture)
+    bgMusic.play().catch(() => {
+        // If blocked, wait for any click to start
+        document.body.addEventListener('click', () => bgMusic.play(), { once: true });
+    });
 }
 
 function startRain() {
-    const bgMusic = document.getElementById("bgMusic");
-    const clickMusic = document.getElementById("clickMusic");
-
     bgMusic.pause();
 
     // start sound2.mp3 at 7 seconds
     clickMusic.currentTime = 7;
-    clickMusic.play();
+    clickMusic.play().catch(() => {
+        // If blocked, wait for any click to start
+        document.body.addEventListener('click', () => clickMusic.play(), { once: true });
+    });
 
     // fade in dance.gif below button
     const dance = document.getElementById("danceGif");
